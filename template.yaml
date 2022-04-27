@@ -3,7 +3,7 @@ kind: Template
 # some metadata about the template itself
 metadata:
   name: v1beta3-demo
-  title: Gurpreet Action template
+  title: Gurpreet2 Action template
   description: scaffolder v1beta3 template demo
 spec:
   owner: backstage/techdocs-core
