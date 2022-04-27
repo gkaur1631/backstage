@@ -1,9 +1,10 @@
+# Notice the v1beta3 version
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 # some metadata about the template itself
 metadata:
   name: v1beta3-demo
-  title: Test Action template
+  title: Gurpreet
   description: scaffolder v1beta3 template demo
 spec:
   owner: backstage/techdocs-core
@@ -22,6 +23,14 @@ spec:
           ui:autofocus: true
           ui:options:
             rows: 5
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
     - title: Choose a location
       required:
         - repoUrl
@@ -36,28 +45,28 @@ spec:
 
   # here's the steps that are executed in series in the scaffolder backend
   steps:
-    - id: template
-      name: Fetch Skeleton + Template
+    - id: fetch-base
+      name: Fetch Base
       action: fetch:template
       input:
-        url: ./skeleton
-        copyWithoutRender:
-          - .github/workflows/*
+        url: ./template
         values:
-          component_id: ${{ parameters.component_id }}
-          description: ${{ parameters.description }}
-          artifact_id: ${{ parameters.component_id }}
-          java_package_name: ${{ parameters.java_package_name }}
+          name: ${{ parameters.name }}
           owner: ${{ parameters.owner }}
-          destination: ${{ parameters.repoUrl | parseRepoUrl }}
-          http_port: 8080
+
+    - id: fetch-docs
+      name: Fetch Docs
+      action: fetch:plain
+      input:
+        targetPath: ./community
+        url: https://github.com/backstage/community/tree/main/backstage-community-sessions
 
     - id: publish
       name: Publish
       action: publish:github
       input:
-        allowedHosts: ["github.com"]
-        description: This is ${{ parameters.component_id }}
+        allowedHosts: ['github.com']
+        description: This is ${{ parameters.name }}
         repoUrl: ${{ parameters.repoUrl }}
 
     - id: register
@@ -65,4 +74,9 @@ spec:
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: "/catalog-info.yaml"
+        catalogInfoPath: '/catalog-info.yaml'
+
+  # some outputs which are saved along with the job for use in the frontend
+  output:
+    remoteUrl: ${{ steps.publish.output.remoteUrl }}
+    entityRef: ${{ steps.register.output.entityRef }}
