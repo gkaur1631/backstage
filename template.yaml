@@ -5,6 +5,10 @@ metadata:
   name: v1beta3-demo
   title: Test Action template
   description: scaffolder v1beta3 template demo
+  links:
+    - url: https://dashboard.example.com
+      title: My Dashboard
+      icon: dashboard
 spec:
   owner: backstage/techdocs-core
   type: service
