@@ -3,12 +3,8 @@ kind: Template
 # some metadata about the template itself
 metadata:
   name: v1beta3-demo
-  title: Test Action template
+  title: Gurpreet Action template
   description: scaffolder v1beta3 template demo
-  links:
-    - url: https://dashboard.example.com
-      title: My Dashboard
-      icon: dashboard
 spec:
   owner: backstage/techdocs-core
   type: service
@@ -54,19 +50,18 @@ spec:
       input:
         targetPath: ./community
         url: https://github.com/backstage/community/tree/main/backstage-community-sessions
-        
+
     - id: publish
       name: Publish
       action: publish:github
       input:
         allowedHosts: ['github.com']
         description: This is ${{ parameters.name }}
-        repoUrl: ${{ parameters.repoUrl }
+        repoUrl: ${{ parameters.repoUrl }}
 
-   - id: register
+    - id: register
       name: Register
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
-
